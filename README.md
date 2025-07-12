@@ -3,6 +3,7 @@
 Self-hosted services and applications for personal use, built with Docker and modern DevOps practices.
 
 ## Architecture Overview
+```
 
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │  Network Server │    │   Main Server    │    │  External DNS   │
@@ -14,6 +15,8 @@ Self-hosted services and applications for personal use, built with Docker and mo
 │ • Core Services │    │ • Media Stack   │    │                 │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
 
+
+```
 ## Service Stack
 
 ### Core Infrastructure
