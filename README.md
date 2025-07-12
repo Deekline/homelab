@@ -3,20 +3,15 @@
 Self-hosted services and applications for personal use, built with Docker and modern DevOps practices.
 
 ## Architecture Overview
-```
 
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│  Network Server │    │   Main Server    │    │  External DNS   │
-│   (24/7 Ops)   │    │  (Development)   │    │   (Cloudflare)  │
-├─────────────────┤    ├──────────────────┤    ├─────────────────┤
-│ • OPNsense      │    │ • Traefik       │    │ • DNS Records   │
-│ • DNS Server    │◄──►│ • Authentik     │◄──►│ • SSL Certs     │
-│ • Monitoring    │    │ • Portainer     │    │ • API Access    │
-│ • Core Services │    │ • Media Stack   │    │                 │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
+| Network Server      | Main Server          | External DNS      |
+|---------------------|---------------------|-------------------|
+| **(24/7 Ops)**      | **(Development)**   | **(Cloudflare)**  |
+| OPNsense            | Traefik             | DNS Records       |
+| DNS Server          | Authentik           | SSL Certs         |
+| Monitoring          | Portainer           | API Access        |
+| Core Services       | Media Stack         |                   |
 
-
-```
 ## Service Stack
 
 ### Core Infrastructure
