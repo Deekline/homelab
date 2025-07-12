@@ -1,0 +1,7 @@
+.env
+traefik/config/acme.json
+traefik/config/dynamic/services.yml
+
+/logs
+*.log
+*.tmp
