@@ -43,6 +43,9 @@ Self-hosted services and applications for personal use, built with Docker and mo
 |---------|---------|---------|---------|
 | **Nextcloud** | File storage & collaboration | 🔄 Planned | Main Server |
 | **Immich** | Photo management | 🔄 Planned | Main Server |
+| **TrueNAS Scale** | Storage Management | 🔄 Planned | Main Server |
+| **Home Assistant** | IoT | 🔄 Planned | Main Server |
+
 
 ### Network Infrastructure
 | Service | Purpose | Status | Network |
@@ -79,8 +82,10 @@ Self-hosted services and applications for personal use, built with Docker and mo
 
 ### Segmentation
 - **VLAN 10** - Internal services
-- **VLAN 20** - DMZ services  
-- **WiFi Network** - Development workstation
+- **VLAN 20** - DMZ services
+- **VLAN 30** - IoT
+- **VLAN 40** - Media  
+- **VLAN 50** - WiFi
 
 ### Security
 - **Local-only access** - Services restricted to private networks
