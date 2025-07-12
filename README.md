@@ -7,12 +7,12 @@ Self-hosted services and applications for personal use, built with Docker and mo
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │  Network Server │    │   Main Server    │    │  External DNS   │
-│   (24/7 Ops)    │    │  (Development)   │    │   (Cloudflare)  │
+│   (24/7 Ops)   │    │  (Development)   │    │   (Cloudflare)  │
 ├─────────────────┤    ├──────────────────┤    ├─────────────────┤
-│ • OPNsense      │    │ • Traefik        │    │ • DNS Records   │
-│ • DNS Server    │◄--►│ • Authentik      │◄--►│ • SSL Certs     │
-│ • Monitoring    │    │ • Portainer      │    │ • API Access    │
-│ • Core Services │    │ • Media Stack    │    │                 │
+│ • OPNsense      │    │ • Traefik       │    │ • DNS Records   │
+│ • DNS Server    │◄──►│ • Authentik     │◄──►│ • SSL Certs     │
+│ • Monitoring    │    │ • Portainer     │    │ • API Access    │
+│ • Core Services │    │ • Media Stack   │    │                 │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
 ```
 
