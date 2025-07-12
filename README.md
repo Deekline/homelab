@@ -4,7 +4,6 @@ Self-hosted services and applications for personal use, built with Docker and mo
 
 ## Architecture Overview
 
-```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │  Network Server │    │   Main Server    │    │  External DNS   │
 │   (24/7 Ops)   │    │  (Development)   │    │   (Cloudflare)  │
@@ -14,7 +13,6 @@ Self-hosted services and applications for personal use, built with Docker and mo
 │ • Monitoring    │    │ • Portainer     │    │ • API Access    │
 │ • Core Services │    │ • Media Stack   │    │                 │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
-```
 
 ## Service Stack
 
