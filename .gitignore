@@ -2,6 +2,8 @@
 traefik/config/acme.json
 traefik/config/dynamic/services.yml
 
+portainer/data
+
 /logs
 *.log
 *.tmp

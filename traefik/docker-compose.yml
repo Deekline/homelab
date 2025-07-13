@@ -30,6 +30,7 @@ services:
       - "traefik.http.routers.traefik-dashboard-secure.tls.certresolver=cloudflare"
       - "traefik.http.routers.traefik-dashboard-secure.service=api@internal"
       - "traefik.http.routers.traefik-dashboard-secure.middlewares=local-only@file,traefik-auth@file,security-headers@file"
+      - "traefik.http.routers.traefik-dashboard-secure.middlewares=authentik@file"
 
 networks:
   homelab:
