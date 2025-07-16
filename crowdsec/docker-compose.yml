@@ -6,10 +6,10 @@ services:
       GID: "${GID-1000}"
       COLLECTIONS: "crowdsecurity/linux crowdsecurity/traefik"
     volumes:
-      - /homelab/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
-      - /homelab/crowdsec/db:/var/lib/crowdsec/data/
-      - /homelab/crowdsec/config:/etc/crowdsec/
-      - /homelab/traefik/logs:/var/log/traefik/:ro
+      - /home/deekline/homelab/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
+      - /home/deekline/homelab/crowdsec/db:/var/lib/crowdsec/data/
+      - /home/deekline/homelab/crowdsec/config:/etc/crowdsec/
+      - /home/deekline/homelab/traefik/logs:/var/log/traefik/:ro
     networks:
       - homelab
     security_opt:

@@ -18,6 +18,7 @@ Self-hosted services and applications for personal use, built with Docker and mo
 | Service | Purpose | Status | Network |
 |---------|---------|---------|---------|
 | **Traefik** | Reverse proxy & SSL termination | ✅ Active | Main Server |
+| **CrowdSec/ Traefik Bouncer** | IPS & IDS | ✅ Active | Main Server |
 | **Authentik** | Identity provider & SSO | ✅ Active | Main Server |
 | **Portainer** | Docker management interface | ✅ Active | Main Server |
 
