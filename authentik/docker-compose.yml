@@ -65,9 +65,11 @@ services:
       - "traefik.http.routers.authentik-server.rule=Host(`auth.${DOMAIN_NAME}`)"
       - "traefik.http.routers.authentik-server.tls=true"
       - "traefik.http.routers.authentik-server.tls.certresolver=cloudflare"
-      - "traefik.http.routers.authentik-server.service=authentik-server"
       - "traefik.http.routers.authentik-server.middlewares=local-only@file,security-headers@file"
-      - "traefik.http.routers.authentik-server.rule=Host(`auth.${DOMAIN_NAME}`) || HostRegexp(`{subdomain:[a-z0-9]+}.${DOMAIN_NAME}`) && PathPrefix(`/outpost.goauthentik.io/`)"
+
+      - "traefik.http.routers.authentik-secure.rule=Host(`auth.${DOMAIN_NAME}`) || HostRegexp(`{subdomain:[a-z0-9]+}.${DOMAIN_NAME}`) && PathPrefix(`/outpost.goauthentik.io/`)"
+      - "traefik.http.routers.authentic-secure.tls=true"
+      - "traefik.http.routers.authentic-secure.service=authentik-server"
       - "traefik.http.services.authentik-server.loadbalancer.server.port=9000"
     security_opt:
       - no-new-privileges:true

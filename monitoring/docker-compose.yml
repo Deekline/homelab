@@ -1,0 +1,116 @@
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    user: "65534:65534"
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - grafana-monitoring
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+      - '--storage.tsdb.retention.time=90d'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prometheus.entrypoints=websecure"
+      - "traefik.http.routers.prometheus.rule=Host(`prometheus.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.prometheus.tls=true"
+      - "traefik.http.routers.prometheus.tls.certresolver=cloudflare"
+      - "traefik.http.routers.prometheus.service=prometheus"
+      - "traefik.http.routers.prometheus.middlewares=local-only@file,authentik@file,security-headers@file"
+      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    user: "65534:65534"
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - homelab
+      - grafana-monitoring
+    environment:
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PSWD}
+    volumes:
+      - ./grafana_data:/var/lib/grafana
+      - ./provisioning:/etc/grafana/provisioning
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.grafana.tls=true"
+      - "traefik.http.routers.grafana.tls.certresolver=cloudflare"
+      - "traefik.http.routers.grafana.service=grafana"
+      - "traefik.http.routers.grafana.middlewares=local-only@file,authentik@file,security-headers@file"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+
+  telegraf:
+    image: telegraf:latest
+    container_name: telegraf
+    restart: unless-stopped
+    user: telegraf:${DOCKER_GID} #you need to find the GID of Docker if not added to Sudo group
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - grafana-monitoring
+    volumes:
+      - './telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro'
+      - '/:/hostfs:ro' 
+      - '/var/run/docker.sock:/var/run/docker.sock' 
+      - ./mibs:/usr/share/snmp/mibs' 
+    environment:
+      - HOST_ETC=/hostfs/etc
+      - HOST_PROC=/hostfs/proc
+      - HOST_SYS=/hostfs/sys
+      - HOST_VAR=/hostfs/var
+      - HOST_RUN=/hostfs/run
+      - HOST_MOUNT_PREFIX=/hostfs
+
+      - INFLUX_TOKEN_DOCKER=${INFLUX_TOKEN_DOCKER}
+      - INFLUX_TOKEN_PROXMOX=${INFLUX_TOKEN_PROXMOX}
+
+      - INFLUX_DOCKER_BUCKET=${INFLUX_DOCKER_BUCKET}
+      - INFLUX_PROXMOX_BUCKET=${INFLUX_PROXMOX_BUCKET}
+      - INFLUX_ORG=${INFLUX_ORG}
+
+      - PVE_HOST=${PVE_HOST}
+      - PVE_USER=${PVE_USER}
+      - PVE_TOKEN_NAME=${PVE_TOKEN_NAME}
+      - PVE_TOKEN_VALUE=${PVE_TOKEN_VALUE}
+  influxdb:
+      container_name: influxdb
+      image: influxdb:latest
+      restart: unless-stopped
+      networks:
+        - homelab
+        - grafana-monitoring
+      volumes:
+        - ./influxdb:/var/lib/influxdb2
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.influxdb.entrypoints=websecure"
+        - "traefik.http.routers.influxdb.rule=Host(`influx.${DOMAIN_NAME}`)"
+        - "traefik.http.routers.influxdb.tls=true"
+        - "traefik.http.routers.influxdb.tls.certresolver=cloudflare"
+        - "traefik.http.routers.influxdb.service=influxdb"
+        - "traefik.http.routers.influxdb.middlewares=local-only@file"
+        - "traefik.http.services.influxdb.loadbalancer.server.port=8086"
+
+networks:
+  grafana-monitoring:
+    name: grafana-monitoring
+  homelab:
+    name: homelab
+    external: true
