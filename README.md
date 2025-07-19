@@ -27,8 +27,10 @@ Self-hosted services and applications for personal use, built with Docker and mo
 |---------|---------|---------|---------|
 | **Uptime Kuma** | Service monitoring | ✅ Active | Network Server |
 | **Homepage** | Service dashboard | ✅ Active | Network Server |
-| **Prometheus** | Metrics collection | 🔄 Planned | Main Server |
-| **Grafana** | Metrics visualization | 🔄 Planned | Main Server |
+| **Prometheus** | Metrics collection | ✅ Active | Main Server |
+| **Telegraf** | Metrics collection | ✅ Active | Main Server |
+| **Influx DB** | Metrics storing | ✅ Active | Main Server |
+| **Grafana** | Metrics visualization | ✅ Active | Main Server |
 
 ### Media & Content
 | Service | Purpose | Status | Network |
