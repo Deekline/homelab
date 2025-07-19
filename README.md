@@ -147,11 +147,9 @@ homelab/
 3. **Media Stack** - Automated media management
 
 ### Medium Term
-1. **Nextcloud** - Self-hosted productivity suite
-2. **Immich** - Photo and video management
-3. **VPN Server** - Secure remote access
+1. **TrueNAS Scale** - NAS Environemt
+1. **Proxmox Backup Server** - Backup servier
+2. **Nextcloud** - Self-hosted productivity suite
+3. **Immich** - Photo and video management
+4. **VPN Server** - Secure remote access
 
-### Long Term
-1. **High Availability** - Multi-node setup
-2. **Kubernetes** - Container orchestration platform
-3. **GitOps** - Automated deployment pipeline
