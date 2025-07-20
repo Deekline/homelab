@@ -5,11 +5,15 @@ traefik/config/dynamic/services.yml
 authentik/redis
 crowdsec/config
 crowdsec/db
+
 monitoring/grafana_data
 monitoring/prometheus_data
 monitoring/provisioning
 monitoring/influxdb
 monitoring/mibs
+
+linkwarden/data
+linkwarden/meili_data
 
 portainer/data
 
