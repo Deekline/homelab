@@ -36,6 +36,7 @@ Self-hosted services and applications for personal use, built with Docker and mo
 | Service | Purpose | Status | Network |
 |---------|---------|---------|---------|
 | **RSS Reader** | News aggregation | 🔄 Planned | Main Server |
+| **Linkwarden** | Links aggregation | ✅ Active | Main Server |
 | **Plex/Jellyfin** | Media streaming | 🔄 Planned | Main Server |
 | **Sonarr/Radarr** | Media management | 🔄 Planned | Main Server |
 | **qBittorrent** | Torrent client | 🔄 Planned | Main Server |
