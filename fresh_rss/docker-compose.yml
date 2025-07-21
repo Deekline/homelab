@@ -1,0 +1,73 @@
+services:
+  freshrss-db:
+    image: postgres:16-alpine
+    container_name: freshrss-db
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - freshrss
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U freshrss -d freshrss"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  freshrss:
+    image: freshrss/freshrss:latest
+    container_name: freshrss
+    depends_on:
+      freshrss-db:
+        condition: service_healthy
+    environment:
+      - CRON_MIN=*/15
+      - TZ=Europe/Warsaw
+      - DB_HOST=freshrss-db
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_NAME=${POSTGRES_DB}
+      - DB_PORT=5432
+    volumes:
+      - ./freshrss_data:/var/www/FreshRSS/data
+      - ./freshrss_extensions:/var/www/FreshRSS/extensions
+    networks:
+      - freshrss
+      - homelab
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.freshrss.rule=Host(`rss.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.freshrss.entrypoints=websecure"
+      - "traefik.http.routers.freshrss.tls.certresolver=cloudflare"
+      - "traefik.http.routers.freshrss.middlewares=local-only@file,traefik-auth@file,security-headers@file"
+      - "traefik.http.routers.freshrss.middlewares=authentik@file"
+      - "traefik.http.services.freshrss.loadbalancer.server.port=80"
+
+  rss-bridge:
+    image: rssbridge/rss-bridge:latest
+    container_name: rss-bridge
+    volumes:
+      - ./rss-bridge-config:/config
+    networks:
+      - freshrss
+      - homelab
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rss-bridge.rule=Host(`rss-bridge.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.rss-bridge.entrypoints=websecure"
+      - "traefik.http.routers.rss-bridge.tls.certresolver=cloudflare"
+      - "traefik.http.routers.rss-bridge.middlewares=local-only@file,security-headers@file"
+      - "traefik.http.services.rss-bridge.loadbalancer.server.port=80"
+
+networks:
+  freshrss:
+    name: freshrss
+  homelab:
+    name: homelab
+    external: true

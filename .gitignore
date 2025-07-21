@@ -12,6 +12,8 @@ monitoring/provisioning
 monitoring/influxdb
 monitoring/mibs
 
+fresh_rss/freshrss_data
+
 linkwarden/data
 linkwarden/meili_data
 
