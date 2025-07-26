@@ -1,4 +1,24 @@
 services:
+  k6:
+    build: .
+    container_name: k6
+    env_file:
+      - .env
+    networks: 
+      - grafana-monitoring
+      - homelab
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./scripts:/scripts
+      - ./results:/results
+    working_dir: /scripts
+    environment:
+      - K6_BROWSER_ENABLED=true
+      - K6_INFLUXDB_ORGANIZATION=${K6_INFLUXDB_ORGANIZATION}
+      - K6_INFLUXDB_BUCKET=${K6_INFLUXDB_BUCKET}
+      - K6_INFLUXDB_TOKEN=${K6_INFLUXDB_TOKEN}
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
