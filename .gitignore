@@ -11,8 +11,12 @@ monitoring/prometheus_data
 monitoring/provisioning
 monitoring/influxdb
 monitoring/mibs
+monitoring/results
+monitoring/scripts
 
 fresh_rss/freshrss_data
+
+vikunja/files
 
 linkwarden/data
 linkwarden/meili_data
