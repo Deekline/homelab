@@ -30,6 +30,7 @@ Self-hosted services and applications for personal use, built with Docker and mo
 | **Prometheus** | Metrics collection | ✅ Active | Main Server |
 | **Telegraf** | Metrics collection | ✅ Active | Main Server |
 | **Influx DB** | Metrics storing | ✅ Active | Main Server |
+| **Grafana K6** | Metrics collection | ✅ Active | Main Server |
 | **Grafana** | Metrics visualization | ✅ Active | Main Server |
 
 ### Media & Content
@@ -49,6 +50,8 @@ Self-hosted services and applications for personal use, built with Docker and mo
 | **Immich** | Photo management | 🔄 Planned | Main Server |
 | **TrueNAS Scale** | Storage Management | 🔄 Planned | Main Server |
 | **Home Assistant** | IoT | 🔄 Planned | Main Server |
+| **Vikunja** | Task Management | ✅ Active | Main Server |
+| **n8n** | Automatization | 🔄 Planned | Main Server |
 
 
 ### Network Infrastructure
