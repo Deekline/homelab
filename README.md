@@ -74,6 +74,7 @@ Self-hosted services and applications for personal use, built with Docker and mo
 - **Traefik v3** - Modern reverse proxy
 - **Cloudflare** - DNS and SSL certificate management
 - **OPNsense** - Network routing and security
+- Tailscale - Remote access
 
 ### Authentication & Security
 - **Authentik** - OIDC/SAML identity provider
@@ -110,7 +111,7 @@ homelab/
 ├── portainer/        # Container management
 ├── monitoring/       # Prometheus & Grafana
 ├── media/           # Plex, Sonarr, Radarr
-└── productivity/    # Nextcloud, RSS reader
+└── */                # Nextcloud, RSS reader
 ```
 
 ### Configuration Management
@@ -138,16 +139,16 @@ homelab/
 - **DNS resolution** - Custom domain names via local DNS
 - **SSO integration** - Single login for all services
 
+### External Access
+- **VPN access** - Secure remote connectivity
+
 ### External Access (Future)
 - **Port forwarding** - Selective service exposure
-- **VPN access** - Secure remote connectivity
 - **Public services** - Selected services available from internet
 
 ## Planned Expansion
 
 ### Short Term
-1. **RSS Reader** - News and content aggregation
-2. **Prometheus & Grafana** - Comprehensive monitoring
 3. **Media Stack** - Automated media management
 
 ### Medium Term
@@ -155,5 +156,3 @@ homelab/
 1. **Proxmox Backup Server** - Backup servier
 2. **Nextcloud** - Self-hosted productivity suite
 3. **Immich** - Photo and video management
-4. **VPN Server** - Secure remote access
-
