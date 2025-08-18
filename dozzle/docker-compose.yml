@@ -1,0 +1,23 @@
+services:
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - homelab
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dozzle.entrypoints=websecure"
+      - "traefik.http.routers.dozzle.rule=Host(`dozzle.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.dozzle.tls=true"
+      - "traefik.http.routers.dozzle.tls.certresolver=cloudflare"
+      - "traefik.http.routers.dozzle.service=dozzle"
+      - "traefik.http.routers.dozzle.middlewares=local-only@file,authentik@file,security-headers@file"
+      - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
+networks:
+  homelab:
+    name: homelab
+    external: true
