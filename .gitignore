@@ -4,7 +4,6 @@ traefik/config/dynamic/services.yml
 
 authentik/redis
 crowdsec/config
-crowdsec/db
 
 monitoring/grafana_data
 monitoring/prometheus_data
@@ -15,14 +14,15 @@ monitoring/results
 monitoring/scripts
 
 fresh_rss/freshrss_data
-
 vikunja/files
-
-linkwarden/data
 linkwarden/meili_data
+n8n/n8n_data
+wallos/logos
 
-portainer/data
 
-/logs
+*/data
+*/logs
+*/db
+*/redis
 *.log
 *.tmp
