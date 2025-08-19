@@ -1,0 +1,27 @@
+services:
+  gotify:
+    image: gotify/server
+    container_name: gotify
+    volumes:
+      - /home/ubuntu/docker/gotify:/app/data
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - homelab
+    environment:
+      - TZ=Europe/Warsaw
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gotify.entrypoints=websecure"
+      - "traefik.http.routers.gotify.rule=Host(`gotify.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.gotify.tls=true"
+      - "traefik.http.routers.gotify.tls.certresolver=cloudflare"
+      - "traefik.http.routers.gotify.service=gotify"
+      - "traefik.http.routers.gotify.middlewares=local-only@file,authentik@file,security-headers@file"
+      - "traefik.http.services.gotify.loadbalancer.server.port=80"
+
+networks:
+  homelab:
+    name: homelab
+    external: true
