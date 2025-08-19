@@ -1,0 +1,33 @@
+services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    container_name: audiobookshelf
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - homelab
+    volumes:
+      - ./config:/config
+      - ./metadata:/metadata
+
+      - ./audiobooks:/audiobooks
+      - ./podcasts:/podcasts
+      - ./ebooks:/ebooks
+      # - /mnt/nas/audiobooks:/audiobooks
+    environment:
+      - TZ=Europe/Warsaw  
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.audiobookshelf.entrypoints=websecure"
+      - "traefik.http.routers.audiobookshelf.rule=Host(`audiobookshelf.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.audiobookshelf.tls=true"
+      - "traefik.http.routers.audiobookshelf.tls.certresolver=cloudflare"
+      - "traefik.http.routers.audiobookshelf.service=audiobookshelf"
+      - "traefik.http.routers.audiobookshelf.middlewares=local-only@file,authentik@file,security-headers@file"
+      - "traefik.http.services.audiobookshelf.loadbalancer.server.port=80"
+
+networks:
+  homelab:
+    name: homelab
+    external: true

@@ -6,6 +6,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     security_opt:
       - no-new-privileges:true
+    restart: unless-stopped
     networks:
       - homelab
     labels:

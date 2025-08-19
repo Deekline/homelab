@@ -13,11 +13,20 @@ monitoring/mibs
 monitoring/results
 monitoring/scripts
 
+audiobookshelf/config
+audiobookshelf/ebooks
+audiobookshelf/audiobooks
+audiobookshelf/metadata
+
 fresh_rss/freshrss_data
 vikunja/files
 linkwarden/meili_data
 n8n/n8n_data
 wallos/logos
+
+node_modules
+.nuxt
+.output
 
 
 */data
