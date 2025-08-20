@@ -3,12 +3,13 @@ services:
     image: gotify/server
     container_name: gotify
     volumes:
-      - /home/ubuntu/docker/gotify:/app/data
+      - ./data:/app/data
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     networks:
       - homelab
+      - gotify
     environment:
       - TZ=Europe/Warsaw
     labels:
@@ -21,7 +22,37 @@ services:
       - "traefik.http.routers.gotify.middlewares=local-only@file,authentik@file,security-headers@file"
       - "traefik.http.services.gotify.loadbalancer.server.port=80"
 
+  igotify: # (iGotify-Notification-Assistent)
+    container_name: igotify
+    hostname: igotify
+    image: ghcr.io/androidseb25/igotify-notification-assist:latest
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    pull_policy: always
+    networks:
+      - homelab
+      - gotify
+    volumes:
+      - ./api-data:/app/data
+    environment:                 # option environment see above note
+      - GOTIFY_URLS=http://gotify
+      - GOTIFY_CLIENT_TOKENS=CfabAK38LtvPbvC
+      - ASPNETCORE_HTTPSREDIRECTION_ENABLED=false
+      - ASPNETCORE_ENVIRONMENT=Development
+    labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.igotify.entrypoints=websecure"
+    - "traefik.http.routers.igotify.rule=Host(`igotify.${DOMAIN_NAME}`)"
+    - "traefik.http.routers.igotify.tls=true"
+    - "traefik.http.routers.igotify.tls.certresolver=cloudflare"
+    - "traefik.http.routers.igotify.service=igotify"
+    - "traefik.http.routers.igotify.middlewares=local-only@file,security-headers@file"
+    - "traefik.http.services.igotify.loadbalancer.server.port=8080"
+
 networks:
+  gotify:
+    name: gotify
   homelab:
     name: homelab
     external: true
