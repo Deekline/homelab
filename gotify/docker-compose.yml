@@ -19,7 +19,7 @@ services:
       - "traefik.http.routers.gotify.tls=true"
       - "traefik.http.routers.gotify.tls.certresolver=cloudflare"
       - "traefik.http.routers.gotify.service=gotify"
-      - "traefik.http.routers.gotify.middlewares=local-only@file,authentik@file,security-headers@file"
+      - "traefik.http.routers.gotify.middlewares=local-only@file,security-headers@file"
       - "traefik.http.services.gotify.loadbalancer.server.port=80"
 
   igotify: # (iGotify-Notification-Assistent)
@@ -36,10 +36,10 @@ services:
     volumes:
       - ./api-data:/app/data
     environment:                 # option environment see above note
-      - GOTIFY_URLS=http://gotify
-      - GOTIFY_CLIENT_TOKENS=CfabAK38LtvPbvC
-      - ASPNETCORE_HTTPSREDIRECTION_ENABLED=false
-      - ASPNETCORE_ENVIRONMENT=Development
+      GOTIFY_SERVERS: 'http://gotify'
+      GOTIFY_CLIENTS: 'CfabAK38LtvPbvC'
+      ASPNETCORE_HTTPSREDIRECTION_ENABLED: 'false'
+      ASPNETCORE_ENVIRONMENT: 'Production'
     labels:
     - "traefik.enable=true"
     - "traefik.http.routers.igotify.entrypoints=websecure"
