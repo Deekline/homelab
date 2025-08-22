@@ -1,9 +1,6 @@
 .env
-traefik/config/acme.json
-traefik/config/dynamic/services.yml
 
 authentik/redis
-crowdsec/config
 
 monitoring/grafana_data
 monitoring/prometheus_data
@@ -13,7 +10,6 @@ monitoring/mibs
 monitoring/results
 monitoring/scripts
 
-audiobookshelf/config
 audiobookshelf/ebooks
 audiobookshelf/audiobooks
 audiobookshelf/metadata
@@ -29,6 +25,7 @@ node_modules
 .output
 
 
+*/config
 */data
 */logs
 */db
