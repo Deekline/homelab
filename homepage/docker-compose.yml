@@ -1,0 +1,28 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - homelab
+    volumes:
+      - ./config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock # (optional) For docker integrations
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: ${DOCKER_ID},homepage.${DOMAIN_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homepage.entrypoints=websecure"
+      - "traefik.http.routers.homepage.rule=Host(`homepage.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.homepage.tls=true"
+      - "traefik.http.routers.homepage.tls.certresolver=cloudflare"
+      - "traefik.http.routers.homepage.service=homepage"
+      - "traefik.http.routers.homepage.middlewares=local-only@file,authentik@file,security-headers@file"
+      - "traefik.http.services.homepage.loadbalancer.server.port=3000"
+
+networks:
+  homelab:
+    name: homelab
+    external: true
