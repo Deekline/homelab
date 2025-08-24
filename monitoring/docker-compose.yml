@@ -6,7 +6,6 @@ services:
       - .env
     networks: 
       - grafana-monitoring
-      - homelab
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -109,6 +108,66 @@ services:
       - PVE_USER=${PVE_USER}
       - PVE_TOKEN_NAME=${PVE_TOKEN_NAME}
       - PVE_TOKEN_VALUE=${PVE_TOKEN_VALUE}
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: unless-stopped
+    user: "10001:10001"
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - grafana-monitoring
+      - homelab
+    volumes:
+      - ./loki_config/config.yaml:/etc/loki/config.yaml:ro
+      - ./loki_data:/loki:rw
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.loki.entrypoints=websecure"
+      - "traefik.http.routers.loki.rule=Host(`loki.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.loki.tls=true"
+      - "traefik.http.routers.loki.tls.certresolver=cloudflare"
+      - "traefik.http.routers.loki.service=loki"
+      - "traefik.http.routers.loki.middlewares=local-only@file,authentik@file,security-headers@file"
+      - "traefik.http.services.loki.loadbalancer.server.port=3100"
+
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    hostname: alloy
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    volumes:
+      - ./config.alloy:/etc/alloy/config.alloy
+      - alloy_data:/var/lib/alloy/data
+      - /:/rootfs:ro
+      - /run:/run:ro
+      - /var/log:/var/log:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker/:ro
+      - /run/udev/data:/run/udev/data:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - grafana-monitoring
+      - homelab
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.alloy.entrypoints=websecure"
+      - "traefik.http.routers.alloy.rule=Host(`alloy.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.alloy.tls=true"
+      - "traefik.http.routers.alloy.tls.certresolver=cloudflare"
+      - "traefik.http.routers.alloy.service=alloy"
+      - "traefik.http.routers.alloy.middlewares=local-only@file,authentik@file,security-headers@file"
+      - "traefik.http.services.alloy.loadbalancer.server.port=12345"
+
   influxdb:
       container_name: influxdb
       image: influxdb:latest
@@ -127,6 +186,10 @@ services:
         - "traefik.http.routers.influxdb.service=influxdb"
         - "traefik.http.routers.influxdb.middlewares=local-only@file"
         - "traefik.http.services.influxdb.loadbalancer.server.port=8086"
+
+volumes:
+  alloy_data:
+    driver: local
 
 networks:
   grafana-monitoring:
