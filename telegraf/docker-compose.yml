@@ -1,0 +1,43 @@
+services:
+  telegraf:
+    image: telegraf:latest
+    container_name: telegraf
+    restart: unless-stopped
+    user: telegraf:${DOCKER_GID} #you need to find the GID of Docker if not added to Sudo group
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - monitoring
+    volumes:
+      - './telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro'
+      - '/:/hostfs:ro' 
+      - '/var/run/docker.sock:/var/run/docker.sock' 
+      - ./mibs:/usr/share/snmp/mibs' 
+    environment:
+      - HOST_ETC=/hostfs/etc
+      - HOST_PROC=/hostfs/proc
+      - HOST_SYS=/hostfs/sys
+      - HOST_VAR=/hostfs/var
+      - HOST_RUN=/hostfs/run
+      - HOST_MOUNT_PREFIX=/hostfs
+
+      - INFLUX_TOKEN_DOCKER=${INFLUX_TOKEN_DOCKER}
+      - INFLUX_TOKEN_PROXMOX=${INFLUX_TOKEN_PROXMOX}
+
+      - INFLUX_DOCKER_BUCKET=${INFLUX_DOCKER_BUCKET}
+      - INFLUX_PROXMOX_BUCKET=${INFLUX_PROXMOX_BUCKET}
+      - INFLUX_ORG=${INFLUX_ORG}
+
+      - PVE_HOST=${PVE_HOST}
+      - PVE_USER=${PVE_USER}
+      - PVE_TOKEN_NAME=${PVE_TOKEN_NAME}
+      - PVE_TOKEN_VALUE=${PVE_TOKEN_VALUE}
+
+
+networks:
+  homelab:
+    name: homelab
+    external: true
+  monitoring: 
+    name: homelab
+    external: true

@@ -1,14 +1,9 @@
 .env
+node_modules
+.nuxt
+.output
 
 authentik/redis
-
-monitoring/grafana_data
-monitoring/prometheus_data
-monitoring/provisioning
-monitoring/influxdb
-monitoring/mibs
-monitoring/results
-monitoring/scripts
 
 audiobookshelf/ebooks
 audiobookshelf/audiobooks
@@ -19,12 +14,17 @@ vikunja/files
 linkwarden/meili_data
 n8n/n8n_data
 wallos/logos
+grafana/k6_webui
 
-node_modules
-.nuxt
-.output
-
-
+*/grafana_data
+*/prometheus_data
+*/loki_data
+*/loki_config
+*/provisioning
+*/influxdb
+*/mibs
+*/results
+*/scripts
 */config
 */data
 */logs
