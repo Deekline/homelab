@@ -11,6 +11,7 @@ Self-hosted services and applications for personal use, built with Docker and mo
 | DNS Server          | Authentik           | SSL Certs         |
 | Monitoring          | Portainer           | API Access        |
 | Core Services       | Media Stack         |                   |
+| Zenarmor            | Other               |                   |
 
 ## Service Stack
 
@@ -32,6 +33,8 @@ Self-hosted services and applications for personal use, built with Docker and mo
 | **Influx DB** | Metrics storing | ✅ Active | Main Server |
 | **Grafana K6** | Metrics collection | ✅ Active | Main Server |
 | **Grafana** | Metrics visualization | ✅ Active | Main Server |
+| **Graylog** | Logs collection | 🔄 Planned | Main Server |
+
 
 ### Media & Content
 | Service | Purpose | Status | Network |
@@ -51,7 +54,7 @@ Self-hosted services and applications for personal use, built with Docker and mo
 | **TrueNAS Scale** | Storage Management | 🔄 Planned | Main Server |
 | **Home Assistant** | IoT | 🔄 Planned | Main Server |
 | **Vikunja** | Task Management | ✅ Active | Main Server |
-| **n8n** | Automatization | 🔄 Planned | Main Server |
+| **n8n** | Automatization | ✅ Active | Main Server |
 
 
 ### Network Infrastructure
@@ -62,6 +65,8 @@ Self-hosted services and applications for personal use, built with Docker and mo
 | **Suricata** | Intrusion detection | ✅ Active | Network Server |
 | **CrowdSec** | Behavioral analysis & IP blocking | ✅ Active | Network Server |
 | **WireGuard** | VPN server & client | ✅ Active | Network Server |
+| **Tailscale** | VPN remote access | ✅ Active | Network Server |
+| **Zenarmor** | Zero Trust threat protecion| ✅ Active | Network Server |
 
 ## Technology Stack
 
@@ -74,7 +79,7 @@ Self-hosted services and applications for personal use, built with Docker and mo
 - **Traefik v3** - Modern reverse proxy
 - **Cloudflare** - DNS and SSL certificate management
 - **OPNsense** - Network routing and security
-- Tailscale - Remote access
+- **Tailscale** - Remote access
 
 ### Authentication & Security
 - **Authentik** - OIDC/SAML identity provider
@@ -84,6 +89,7 @@ Self-hosted services and applications for personal use, built with Docker and mo
 ### Monitoring & Observability
 - **Prometheus** - Metrics collection
 - **Grafana** - Dashboards and visualization
+- **Graylog** - Logs collection
 - **Uptime Kuma** - Service availability monitoring
 
 ## Network Design
@@ -109,7 +115,8 @@ homelab/
 ├── traefik/          # Reverse proxy configuration
 ├── authentik/        # Identity provider
 ├── portainer/        # Container management
-├── monitoring/       # Prometheus & Grafana
+├── grafana/          #  Grafana Stack
+├── telegraf/         #  Metrics collection agent
 ├── media/           # Plex, Sonarr, Radarr
 └── */                # Nextcloud, RSS reader
 ```
