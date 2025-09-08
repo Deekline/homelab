@@ -1,0 +1,20 @@
+services:
+  cyberchef:
+      image: mpepping/cyberchef:latest
+      restart: unless-stopped
+      container_name: cyberchef
+      networks:
+        - homelab
+      labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cyberchef.entrypoints=websecure"
+      - "traefik.http.routers.cyberchef.rule=Host(`cyberchef.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.cyberchef.tls=true"
+      - "traefik.http.routers.cyberchef.tls.certresolver=cloudflare"
+      - "traefik.http.routers.cyberchef.service=cyberchef"
+      - "traefik.http.routers.cyberchef.middlewares=local-only@file,authentik@file,security-headers@file"
+      - "traefik.http.services.cyberchef.loadbalancer.server.port=8000"
+
+networks:
+  homelab:
+    external: true
