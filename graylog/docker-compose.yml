@@ -1,0 +1,64 @@
+services:
+  opensearch: 
+    image: opensearchproject/opensearch:latest
+    container_name: opensearch
+    restart: unless-stopped
+    networks:
+      - graylog_internal
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEATCH_JAVA_OPTS=-Xms1g -Xmx1g"
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_INITIAL_ADMIN_PASSWORD}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./opensearch_data:/usr/share/opensearch/data
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    restart: unless-stopped
+    networks:
+      - graylog_internal
+    volumes:
+      - ./mongo_data:/data/db
+
+  graylog:
+    image: graylog/graylog:6.0
+    container_name: graylog
+    depends_on:
+      - mongo
+      - opensearch
+    restart: unless-stopped
+    networks:
+      - graylog_internal
+      - homelab
+    environment: 
+      - GRAYLOG_PASSWORD_SECRET=${GRAYLOG_PASSWORD_SECRET}
+      - GRAYLOG_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}
+      - GRAYLOG_HTTP_EXTERNAL_URI=https://graylog.${DOMAIN_NAME}
+      - GRAYLOG_ELASTICSEARCH_HOSTS=http://opensearch:9200
+    entrypoint: >
+      /usr/bin/tini -- wait-for-it mongo:27017 -- wait-for-it opensearch:9200 -- /docker-entrypoint.sh
+    volumes:
+      - ./graylog_config:/usr/share/graylog/config
+      - ./graylog_journal:/usr/share/graylog/data/journal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.graylog.entrypoints=websecure"
+      - "traefik.http.routers.graylog.rule=Host(`graylog.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.graylog.tls=true"
+      - "traefik.http.routers.graylog.tls.certresolver=cloudflare"
+      - "traefik.http.routers.graylog.service=graylog"
+      - "traefik.http.routers.graylog.middlewares=local-only@file,authentik@file,security-headers@file"
+      - "traefik.http.services.graylog.loadbalancer.server.port=9000"
+
+networks:
+  homelab:
+    name: homelab
+    external: true
+  graylog_internal:
+    name: graylog_internal
