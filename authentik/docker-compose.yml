@@ -16,12 +16,12 @@ services:
       POSTGRES_USER: ${PG_USER:-authentik}
       POSTGRES_DB: ${PG_DB:-authentik}
     networks:
-      - homelab
+      - authentik
     security_opt:
       - no-new-privileges:true
 
   redis:
-    image: docker.io/redis:7-alpine
+    image: docker.io/redis:alpine
     container_name: authentik-redis
     command: --save 60 1 --loglevel warning
     restart: unless-stopped
@@ -34,12 +34,12 @@ services:
     volumes:
       - ./redis:/data
     networks:
-      - homelab
+      - authentik
     security_opt:
       - no-new-privileges:true
 
   server:
-    image: ghcr.io/goauthentik/server:2025.6
+    image: ghcr.io/goauthentik/server:2025.8.1
     container_name: authentik-server
     restart: unless-stopped
     command: server
@@ -49,30 +49,33 @@ services:
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
       AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      AUTHENTIK_LOG_LEVEL: "debug"
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
-      AUTHENTIK_ERROR_REPORTING__ENABLED: "false"
     volumes:
       - ./media:/media
       - ./custom-templates:/templates
     networks:
       - homelab
+      - authentik
     depends_on:
-      - postgresql
-      - redis
+      postgresql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.authentik-server.entrypoints=websecure"
       - "traefik.http.routers.authentik-server.rule=Host(`auth.${DOMAIN_NAME}`) || HostRegexp(`{subdomain:[a-z0-9]+}.${DOMAIN_NAME}`) && PathPrefix(`/outpost.goauthentik.io/`)"
       - "traefik.http.routers.authentik-server.tls=true"
       - "traefik.http.routers.authentik-server.tls.certresolver=cloudflare"
-      - "traefik.http.routers.authentic-server.service=authentik-server"
+      - "traefik.http.routers.authentik-server.service=authentik-server"
       - "traefik.http.routers.authentik-server.middlewares=local-only@file,security-headers@file"
       - "traefik.http.services.authentik-server.loadbalancer.server.port=9000"
     security_opt:
       - no-new-privileges:true
 
   worker:
-    image: ghcr.io/goauthentik/server:2025.6
+    image: ghcr.io/goauthentik/server:2025.8.1
     container_name: authentik-worker
     restart: unless-stopped
     command: worker
@@ -99,9 +102,12 @@ services:
       - ./custom-templates:/templates
     networks:
       - homelab
+      - authentik
     depends_on:
-      - postgresql
-      - redis
+      postgresql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     security_opt:
       - no-new-privileges:true
 
@@ -109,4 +115,6 @@ networks:
   homelab:
     name: homelab
     external: true
+  authentik:
+    name: authentik
 
