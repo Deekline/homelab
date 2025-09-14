@@ -1,11 +1,13 @@
 services:
   opensearch: 
-    image: opensearchproject/opensearch:latest
+    image: opensearchproject/opensearch:2.15.0
     container_name: opensearch
     restart: unless-stopped
     networks:
       - graylog_internal
     environment:
+      - plugins.security.ssl.http.enabled=false
+      - plugins.security.disabled=true
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       - "OPENSEATCH_JAVA_OPTS=-Xms1g -Xmx1g"
@@ -27,11 +29,13 @@ services:
       - ./mongo_data:/data/db
 
   graylog:
-    image: graylog/graylog:6.0
+    image: graylog/graylog:6.3.3
     container_name: graylog
     depends_on:
-      - mongo
-      - opensearch
+      mongo:
+        condition: "service_started"
+      opensearch:
+        condition: "service_started"
     restart: unless-stopped
     networks:
       - graylog_internal
@@ -39,13 +43,12 @@ services:
     environment: 
       - GRAYLOG_PASSWORD_SECRET=${GRAYLOG_PASSWORD_SECRET}
       - GRAYLOG_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}
-      - GRAYLOG_HTTP_EXTERNAL_URI=https://graylog.${DOMAIN_NAME}
-      - GRAYLOG_ELASTICSEARCH_HOSTS=http://opensearch:9200
+      - GRAYLOG_HTTP_EXTERNAL_URI=https://graylog.${DOMAIN_NAME}/
+      - GRAYLOG_ELASTICSEARCH_HOSTS=http://opensearch:9200/
     entrypoint: >
       /usr/bin/tini -- wait-for-it mongo:27017 -- wait-for-it opensearch:9200 -- /docker-entrypoint.sh
     volumes:
-      - ./graylog_config:/usr/share/graylog/config
-      - ./graylog_journal:/usr/share/graylog/data/journal
+      - ./graylog_data:/usr/share/graylog/data/data
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.graylog.entrypoints=websecure"
