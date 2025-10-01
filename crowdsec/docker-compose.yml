@@ -4,7 +4,7 @@ services:
     container_name: crowdsec
     environment:
       GID: "${GID-1000}"
-      COLLECTIONS: "crowdsecurity/linux crowdsecurity/traefik"
+      COLLECTIONS: "crowdsecurity/linux crowdsecurity/traefik crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules"
     volumes:
       - /home/deekline/homelab/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
       - /home/deekline/homelab/crowdsec/db:/var/lib/crowdsec/data/
@@ -16,19 +16,19 @@ services:
       - no-new-privileges:true
     restart: unless-stopped
 
-  bouncer-traefik:
-    image: docker.io/fbonalair/traefik-crowdsec-bouncer:latest
-    container_name: bouncer-traefik
-    environment:
-      CROWDSEC_BOUNCER_API_KEY: ${CROWDSEC_BOUNCER_API_KEY}
-      CROWDSEC_AGENT_HOST: crowdsec:8080
-    networks:
-      - homelab
-    depends_on:
-      - crowdsec
-    restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
+ # bouncer-traefik:
+ #   image: docker.io/fbonalair/traefik-crowdsec-bouncer:latest
+ #   container_name: bouncer-traefik
+ #   environment:
+ #     CROWDSEC_BOUNCER_API_KEY: ${CROWDSEC_BOUNCER_API_KEY}
+ #     CROWDSEC_AGENT_HOST: crowdsec:8080
+ #   networks:
+ #     - homelab
+ #   depends_on:
+ #     - crowdsec
+ #   restart: unless-stopped
+ #   security_opt:
+ #     - no-new-privileges:true
 
 networks:
   homelab:
