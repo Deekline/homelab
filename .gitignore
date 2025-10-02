@@ -9,19 +9,11 @@ audiobookshelf/ebooks
 audiobookshelf/audiobooks
 audiobookshelf/metadata
 
-fresh_rss/freshrss_data
 vikunja/files
-linkwarden/meili_data
-n8n/n8n_data
-wallos/logos
 grafana/k6_webui
 
-*/grafana_data
-*/prometheus_data
-*/mongo_data
-*/opensearch_data
-*/loki_data
-*/loki_config
+*/*_data
+*/*_config
 */provisioning
 */influxdb
 */mibs

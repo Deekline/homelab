@@ -4,14 +4,14 @@ Self-hosted services and applications for personal use, built with Docker and mo
 
 ## Architecture Overview
 
-| Network Server      | Main Server          | External DNS      |
-|---------------------|---------------------|-------------------|
-| **(24/7 Ops)**      | **(Development)**   | **(Cloudflare)**  |
-| OPNsense            | Traefik             | DNS Records       |
-| DNS Server          | Authentik           | SSL Certs         |
-| Monitoring          | Portainer           | API Access        |
-| Core Services       | Media Stack         |                   |
-| Zenarmor            | Other               |                   |
+| Network Server | Main Server       | NAS              | External DNS     |
+| -------------- | ----------------- | ---------------- | ---------------- |
+| **(24/7 Ops)** | **(Development)** | **(TrueNAS CE)** | **(Cloudflare)** |
+| OPNsense       | Traefik           | Samba            | DNS Records      |
+| DNS Server     | Authentik         | ZFS              | SSL Certs        |
+| Monitoring     | Portainer         |                  | API Access       |
+| Core Services  | Media Stack       |                  |                  |
+| Zenarmor       | Other             |                  |                  |
 
 ## Service Stack
 
