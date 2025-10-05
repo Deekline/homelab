@@ -1,19 +1,13 @@
 global:
   checkNewVersion: false
   sendAnonymousUsage: false
-http:
-  middlewares:
-    crowdsec-bouncer:
-      forwardAuth:
-        address: http://bouncer-traefik:8080/api/v1/forwardAuth
-        trustForwardHeader: true
 
 entryPoints:
   web:
     address: ":80"
     http:
       middlewares:
-        - crowdsec-bouncer@file
+        - crowdsec@file
       redirections:
         entryPoint:
           to: websecure
@@ -23,7 +17,7 @@ entryPoints:
     address: ":443"
     http:
       middlewares:
-        - crowdsec-bouncer@file
+        - crowdsec@file
 
 certificatesResolvers:
   cloudflare:
@@ -48,6 +42,7 @@ providers:
 
 api:
   dashboard: true
+  insecure: true
   debug: false
 
 metrics:
@@ -69,3 +64,9 @@ accessLog:
       ClientUsername: drop
     headers:
       defaultMode: keep
+
+experimental:
+  plugins:
+    crowdsec: 
+      moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+      version: "v1.4.5"
