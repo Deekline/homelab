@@ -22,6 +22,7 @@ services:
       - ./config/acme.json:/acme.json
       - ./config/dynamic:/dynamic:ro
       - ./logs:/var/log/traefik
+      - ./config/plugins:/plugins-storage
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik-dashboard-secure.entrypoints=websecure"
