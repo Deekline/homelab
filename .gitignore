@@ -1,28 +1,33 @@
 .env
-node_modules
-.nuxt
-.output
 
-authentik/redis
+monitoring/provisioning
+monitoring/influxdb
+monitoring/mibs
+monitoring/results
+monitoring/scripts
 
+jellyfin_cache
+*/*_config
+
+audiobookshelf/books
 audiobookshelf/ebooks
 audiobookshelf/audiobooks
 audiobookshelf/metadata
 
-vikunja/files
+grafana/provisioning
 grafana/k6_webui
+grafana/results
+grafana/scripts
+
+vikunja/files
 
 */*_data
-*/*_config
-*/provisioning
-*/influxdb
-*/mibs
-*/results
-*/scripts
 */config
-*/data
-*/logs
-*/db
 */redis
+*/data
+*/influxdb
+*/db
+/logs
+*/logos
 *.log
 *.tmp
