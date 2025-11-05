@@ -41,9 +41,9 @@ Self-hosted services and applications for personal use, built with Docker and mo
 |---------|---------|---------|---------|
 | **RSS Reader** | News aggregation | ✅ Active | Main Server |
 | **Linkwarden** | Links aggregation | ✅ Active | Main Server |
-| **Plex/Jellyfin** | Media streaming | 🔄 Planned | Main Server |
-| **Sonarr/Radarr** | Media management | 🔄 Planned | Main Server |
-| **qBittorrent** | Torrent client | 🔄 Planned | Main Server |
+| **Plex/Jellyfin** | Media streaming | ✅ Active | Main Server |
+| **Sonarr/Radarr** | Media management | ✅ Active | Main Server |
+| **qBittorrent** | Torrent client | ✅ Active | Main Server |
 | **Gluetun** | VPN container for torrenting | 🔄 Planned | Main Server |
 
 ### Productivity & Storage
@@ -51,7 +51,7 @@ Self-hosted services and applications for personal use, built with Docker and mo
 |---------|---------|---------|---------|
 | **Nextcloud** | File storage & collaboration | 🔄 Planned | Main Server |
 | **Immich** | Photo management | 🔄 Planned | Main Server |
-| **TrueNAS Scale** | Storage Management | 🔄 Planned | Main Server |
+| **TrueNAS Scale** | Storage Management | ✅ Active | NAS Server |
 | **Home Assistant** | IoT | 🔄 Planned | Main Server |
 | **Vikunja** | Task Management | ✅ Active | Main Server |
 | **n8n** | Automatization | ✅ Active | Main Server |
@@ -154,12 +154,6 @@ homelab/
 - **Public services** - Selected services available from internet
 
 ## Planned Expansion
-
-### Short Term
-3. **Media Stack** - Automated media management
-
-### Medium Term
-1. **TrueNAS Scale** - NAS Environemt
 1. **Proxmox Backup Server** - Backup servier
 2. **Nextcloud** - Self-hosted productivity suite
 3. **Immich** - Photo and video management
