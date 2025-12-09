@@ -28,8 +28,7 @@ services:
       - "traefik.http.routers.linkwarden.tls=true"
       - "traefik.http.routers.linkwarden.tls.certresolver=cloudflare"
       - "traefik.http.routers.linkwarden.service=linkwarden"
-      - "traefik.http.routers.linkwarden.middlewares=local-only@file,traefik-auth@file,security-headers@file"
-      - "traefik.http.routers.linkwarden.middlewares=authentik@file"
+      - "traefik.http.routers.linkwarden.middlewares=local-only@file,authentik@file,security-headers@file"
       - "traefik.http.services.linkwarden.loadbalancer.server.port=3000"
   meilisearch:
     image: getmeili/meilisearch:v1.12.8

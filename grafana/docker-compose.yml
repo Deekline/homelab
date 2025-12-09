@@ -26,24 +26,44 @@ services:
       - "traefik.http.routers.grafana.middlewares=local-only@file,authentik@file,security-headers@file"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
 
-  k6:
-    build: .
-    container_name: k6
-    env_file:
-      - .env
-    networks: 
-      - monitoring
-    security_opt:
-      - no-new-privileges:true
-    volumes:
-      - ./scripts:/scripts
-      - ./results:/results
-    working_dir: /scripts
-    environment:
-      - K6_BROWSER_ENABLED=true
-      - K6_INFLUXDB_ORGANIZATION=${K6_INFLUXDB_ORGANIZATION}
-      - K6_INFLUXDB_BUCKET=${K6_INFLUXDB_BUCKET}
-      - K6_INFLUXDB_TOKEN=${K6_INFLUXDB_TOKEN}
+#  k6:
+#    build: .
+#    container_name: k6
+#    env_file:
+#      - .env
+#    networks:
+#      - monitoring
+#    security_opt:
+#      - no-new-privileges:true
+#    volumes:
+#      - ./scripts:/scripts
+#      - ./results:/results
+#    working_dir: /scripts
+#    environment:
+#      - K6_BROWSER_ENABLED=true
+#      - K6_INFLUXDB_ORGANIZATION=${K6_INFLUXDB_ORGANIZATION}
+#      - K6_INFLUXDB_BUCKET=${K6_INFLUXDB_BUCKET}
+#      - K6_INFLUXDB_TOKEN=${K6_INFLUXDB_TOKEN}
+#  pw:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile.playwright
+#    container_name: pw
+#    env_file:
+#      - .env
+#    working_dir: /scripts
+#    networks:
+#      - monitoring
+#    security_opt:
+#      - no-new-privileges:true
+#    volumes:
+#      - ./scripts:/scripts
+#      - ./results:/results
+#    environment:
+#      - INFLUX_URL=${K6_INFLUXDB_URL:-http://influxdb:8086}
+#      - INFLUX_ORG=${K6_INFLUXDB_ORGANIZATION}
+#      - INFLUX_BUCKET=${K6_INFLUXDB_BUCKET}
+#      - INFLUX_TOKEN=${K6_INFLUXDB_TOKEN}
  # loki:
  #   image: grafana/loki:latest
  #   container_name: loki

@@ -66,7 +66,7 @@ services:
       - "traefik.http.routers.firefly.tls=true"
       - "traefik.http.routers.firefly.tls.certresolver=cloudflare"
       - "traefik.http.routers.firefly.service=firefly"
-      - "traefik.http.routers.firefly.middlewares=local-only@file,authentik@file,security-headers@file"
+      - "traefik.http.routers.firefly.middlewares=local-only@file,security-headers@file"
       - "traefik.http.services.firefly.loadbalancer.server.port=8080"
 
   firefly-db:

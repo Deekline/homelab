@@ -23,7 +23,9 @@ vikunja/files
 
 */*_data
 */config
+*/authentik_database
 */redis
+*/pgdata
 */data
 */influxdb
 */db

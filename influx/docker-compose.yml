@@ -21,6 +21,7 @@ services:
 networks:
   monitoring:
     name: monitoring
+    external: true
   homelab:
     name: homelab
     external: true
