@@ -19,6 +19,8 @@ grafana/k6_webui
 grafana/results
 grafana/scripts
 
+immich/model-cache
+
 vikunja/files
 
 */*_data
