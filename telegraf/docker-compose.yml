@@ -10,9 +10,9 @@ services:
       - monitoring
     volumes:
       - './telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro'
-      - '/:/hostfs:ro' 
-      - '/var/run/docker.sock:/var/run/docker.sock' 
-      - ./mibs:/usr/share/snmp/mibs' 
+      - '/:/hostfs:ro'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - ./mibs:/usr/share/snmp/mibs'
     environment:
       - HOST_ETC=/hostfs/etc
       - HOST_PROC=/hostfs/proc
@@ -33,11 +33,10 @@ services:
       - PVE_TOKEN_NAME=${PVE_TOKEN_NAME}
       - PVE_TOKEN_VALUE=${PVE_TOKEN_VALUE}
 
-
 networks:
   homelab:
     name: homelab
     external: true
-  monitoring: 
+  monitoring:
     name: homelab
     external: true

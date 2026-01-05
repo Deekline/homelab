@@ -21,14 +21,17 @@ grafana/scripts
 
 immich/model-cache
 
+karakeep/meilisearch
+
 vikunja/files
 
-*/*_data
 */config
 */authentik_database
 */redis
 */pgdata
+*/*_data
 */data
+*/.data
 */influxdb
 */db
 /logs
