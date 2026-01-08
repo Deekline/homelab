@@ -88,40 +88,40 @@ services:
  #     - "traefik.http.routers.loki.middlewares=local-only@file,authentik@file,security-headers@file"
  #     - "traefik.http.services.loki.loadbalancer.server.port=3100"
 
- # alloy:
- #   image: grafana/alloy:latest
- #   container_name: alloy
- #   hostname: alloy
- #   restart: unless-stopped
- #   security_opt:
- #     - no-new-privileges:true
- #   command:
- #     - run
- #     - --server.http.listen-addr=0.0.0.0:12345
- #     - --storage.path=/var/lib/alloy/data
- #     - /etc/alloy/config.alloy
- #   volumes:
- #     - ./config.alloy:/etc/alloy/config.alloy
- #     - alloy_data:/var/lib/alloy/data
- #     - /:/rootfs:ro
- #     - /run:/run:ro
- #     - /var/log:/var/log:ro
- #     - /sys:/sys:ro
- #     - /var/lib/docker/:/var/lib/docker/:ro
- #     - /run/udev/data:/run/udev/data:ro
- #     - /var/run/docker.sock:/var/run/docker.sock:ro
- #   networks:
- #     - grafana-monitoring
- #     - homelab
- #   labels:
- #     - "traefik.enable=true"
- #     - "traefik.http.routers.alloy.entrypoints=websecure"
- #     - "traefik.http.routers.alloy.rule=Host(`alloy.${DOMAIN_NAME}`)"
- #     - "traefik.http.routers.alloy.tls=true"
- #     - "traefik.http.routers.alloy.tls.certresolver=cloudflare"
- #     - "traefik.http.routers.alloy.service=alloy"
- #     - "traefik.http.routers.alloy.middlewares=local-only@file,authentik@file,security-headers@file"
- #     - "traefik.http.services.alloy.loadbalancer.server.port=12345"
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    hostname: alloy
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    volumes:
+      - ./config.alloy:/etc/alloy/config.alloy
+      - ./alloy_data:/var/lib/alloy/data
+      - /:/rootfs:ro
+      - /run:/run:ro
+      - /var/log:/var/log:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker/:ro
+      - /run/udev/data:/run/udev/data:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - monitoring
+      - homelab
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.alloy.entrypoints=websecure"
+      - "traefik.http.routers.alloy.rule=Host(`alloy.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.alloy.tls=true"
+      - "traefik.http.routers.alloy.tls.certresolver=cloudflare"
+      - "traefik.http.routers.alloy.service=alloy"
+      - "traefik.http.routers.alloy.middlewares=local-only@file,authentik@file,security-headers@file"
+      - "traefik.http.services.alloy.loadbalancer.server.port=12345"
  #
  # prometheus:
  #   image: prom/prometheus:latest

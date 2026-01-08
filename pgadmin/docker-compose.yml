@@ -1,11 +1,11 @@
 services:
   pgadmin:
-      container_name: pgadmin
-      image: dpage/pgadmin4:latest
-      restart: unless-stopped
-      environment:
-        PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-        PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
       networks:
         - homelab
       labels:
@@ -17,6 +17,7 @@ services:
         - "traefik.http.routers.pgadmin.service=pgadmin"
         - "traefik.http.routers.pgadmin.middlewares=local-only@file,authentik@file,security-headers@file"
         - "traefik.http.services.pgadmin.loadbalancer.server.port=80"
+
 networks:
   homelab:
     name: homelab

@@ -11,9 +11,9 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Warsaw
-    volumes: 
-     - ./qbittorent_config:/config
-     - /media/downloads:/downloads
+    volumes:
+      - ./qbittorent_config:/config
+      - /media/downloads:/downloads
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.qbittorrent.entrypoints=websecure"
@@ -36,10 +36,10 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Warsaw
-    volumes: 
-     - ./sonarr_config:/config
-     - /media/tv:/tv
-     - /media/downloads:/downloads
+    volumes:
+      - ./sonarr_config:/config
+      - /media/tv:/tv
+      - /media/downloads:/downloads
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.sonarr.entrypoints=websecure"
@@ -62,10 +62,10 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Warsaw
-    volumes: 
-     - ./radarr_config:/config
-     - /media/movies:/movies
-     - /media/downloads:/downloads
+    volumes:
+      - ./radarr_config:/config
+      - /media/movies:/movies
+      - /media/downloads:/downloads
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.radarr.entrypoints=websecure"
@@ -88,8 +88,8 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Warsaw
-    volumes: 
-     - ./prowlarr_config:/config
+    volumes:
+      - ./prowlarr_config:/config
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.prowlarr.entrypoints=websecure"
@@ -114,8 +114,8 @@ services:
       - TZ=Europe/Warsaw
     volumes:
       - ./bazarr_config:/config
-      - /media/movies:/movies 
-      - /media/tv:/tv 
+      - /media/movies:/movies
+      - /media/tv:/tv
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bazarr.entrypoints=websecure"
@@ -160,7 +160,7 @@ services:
       - homelab
     environment:
       - TZ=Europe/Warsaw
-    volumes: 
+    volumes:
       - ./jellyfin_config:/config
       - ./jellyfin_cache:/cache
       - /media/movies:/media/movies

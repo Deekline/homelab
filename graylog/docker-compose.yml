@@ -1,5 +1,5 @@
 services:
-  opensearch: 
+  opensearch:
     image: opensearchproject/opensearch:2.15.0
     container_name: opensearch
     restart: unless-stopped
@@ -40,7 +40,7 @@ services:
     networks:
       - graylog_internal
       - homelab
-    environment: 
+    environment:
       - GRAYLOG_PASSWORD_SECRET=${GRAYLOG_PASSWORD_SECRET}
       - GRAYLOG_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}
       - GRAYLOG_HTTP_EXTERNAL_URI=https://graylog.${DOMAIN_NAME}/
