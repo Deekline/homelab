@@ -1,0 +1,107 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  compose-validate:
+    name: compose-validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Docker Compose plugin
+        run: |
+          docker version
+          docker compose version
+
+      - name: Validate all docker-compose.yml files
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(find stacks -maxdepth 2 -type f \( -name 'docker-compose.yml' -o -name 'compose.yml' \) 2>/dev/null || true)
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No compose files found under stacks/"
+            exit 0
+          fi
+
+          for f in "${files[@]}"; do
+            echo "==> Validating: $f"
+            docker compose -f "$f" config >/dev/null
+          done
+
+  yamllint:
+    name: yamllint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: .
+          config_data: |
+            extends: default
+            rules:
+              line-length:
+                max: 140
+              truthy: disable
+
+  terraform:
+    name: terraform
+    runs-on: ubuntu-latest
+    if: ${{ hashFiles('terraform/**') != '' }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: terraform/proxmox
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+
+      - name: terraform fmt (check)
+        run: terraform fmt -check -recursive
+
+      - name: terraform init (no backend)
+        run: terraform init -backend=false
+
+      - name: terraform validate
+        run: terraform validate
+
+  ansible-lint:
+    name: ansible-lint
+    runs-on: ubuntu-latest
+    if: ${{ hashFiles('ansible/**') != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ansible-lint
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install ansible ansible-lint
+
+      - name: ansible-lint
+        run: ansible-lint ansible
+
+  secret-hygiene:
+    name: secret-hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fail if .env files are committed
+        shell: bash
+        run: |
+          set -euo pipefail
+          bad=$(git ls-files | grep -E '(^|/)\.env($|[^.])|\.env\.' | grep -vE '\.example$' || true)
+          if [ -n "$bad" ]; then
+            echo "ERROR: Committed env files detected:"
+            echo "$bad"
+            exit 1
+          fi
