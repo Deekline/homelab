@@ -89,7 +89,7 @@ services:
       - PGID=1000
       - TZ=Europe/Warsaw
     volumes:
-     - ./prowlarr_config:/config
+      - ./prowlarr_config:/config
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.prowlarr.entrypoints=websecure"
