@@ -1,11 +1,11 @@
 services:
   cyberchef:
-      image: mpepping/cyberchef:latest
-      restart: unless-stopped
-      container_name: cyberchef
-      networks:
-        - homelab
-      labels:
+    image: mpepping/cyberchef:latest
+    restart: unless-stopped
+    container_name: cyberchef
+    networks:
+      - homelab
+    labels:
       - "traefik.enable=true"
       - "traefik.http.routers.cyberchef.entrypoints=websecure"
       - "traefik.http.routers.cyberchef.rule=Host(`cyberchef.${DOMAIN_NAME}`)"

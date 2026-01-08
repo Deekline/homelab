@@ -11,7 +11,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Warsaw
-    volumes: 
+    volumes:
      - ./qbittorent_config:/config
      - /media/downloads:/downloads
     labels:
@@ -36,7 +36,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Warsaw
-    volumes: 
+    volumes:
      - ./sonarr_config:/config
      - /media/tv:/tv
      - /media/downloads:/downloads
@@ -62,7 +62,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Warsaw
-    volumes: 
+    volumes:
      - ./radarr_config:/config
      - /media/movies:/movies
      - /media/downloads:/downloads
@@ -88,7 +88,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Warsaw
-    volumes: 
+    volumes:
      - ./prowlarr_config:/config
     labels:
       - "traefik.enable=true"
@@ -114,8 +114,8 @@ services:
       - TZ=Europe/Warsaw
     volumes:
       - ./bazarr_config:/config
-      - /media/movies:/movies 
-      - /media/tv:/tv 
+      - /media/movies:/movies
+      - /media/tv:/tv
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bazarr.entrypoints=websecure"
@@ -160,7 +160,7 @@ services:
       - homelab
     environment:
       - TZ=Europe/Warsaw
-    volumes: 
+    volumes:
       - ./jellyfin_config:/config
       - ./jellyfin_cache:/cache
       - /media/movies:/media/movies

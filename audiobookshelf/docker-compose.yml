@@ -16,7 +16,7 @@ services:
       - ./ebooks:/ebooks
       # - /mnt/nas/audiobooks:/audiobooks
     environment:
-      - TZ=Europe/Warsaw  
+      - TZ=Europe/Warsaw
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.audiobookshelf.entrypoints=websecure"

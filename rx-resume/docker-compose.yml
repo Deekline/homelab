@@ -24,10 +24,10 @@ services:
     restart: unless-stopped
     container_name: minio
     command: server /data
-    ports: 
+    ports:
      - "9000:9000"
      - "9001:9001"
-    networks: 
+    networks:
      - rx
     volumes:
       - ./minio_data:/data
@@ -37,7 +37,7 @@ services:
 
   # Chrome Browser (for printing and previews)
   chrome:
-    image: ghcr.io/browserless/chromium:v2.18.0 
+    image: ghcr.io/browserless/chromium:v2.18.0
     restart: unless-stopped
     networks:
       - rx
@@ -66,27 +66,14 @@ services:
     environment:
       PORT: 3000
       NODE_ENV: production
-
-      # -- URLs --
       PUBLIC_URL: https://resume.${DOMAIN_NAME}
       STORAGE_URL: http://minio:9000/default
-
-      # -- Printer (Chrome) --
       CHROME_TOKEN: chrome_token
       CHROME_URL: wss://chrome:3000
-
-      # -- Database (Postgres) --
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-
-      # -- Auth --
       ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
       REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
-
-      # -- Emails --
       MAIL_FROM: noreply@localhost
-      # SMTP_URL: smtp://user:pass@smtp:587 # Optional
-
-      # -- Storage (Minio) --
       STORAGE_ENDPOINT: minio
       STORAGE_PORT: 9000
       STORAGE_REGION: us-east-1 # Optional
@@ -95,7 +82,6 @@ services:
       STORAGE_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
       STORAGE_USE_SSL: "false"
       STORAGE_SKIP_BUCKET_CHECK: "false"
-
       # -- Crowdin (Optional) --
       # CROWDIN_PROJECT_ID:
       # CROWDIN_PERSONAL_TOKEN:

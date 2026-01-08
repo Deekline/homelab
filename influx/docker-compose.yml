@@ -1,22 +1,22 @@
 services:
   influxdb:
-      container_name: influxdb
-      image: influxdb:latest
-      restart: unless-stopped
-      networks:
-        - homelab
-        - monitoring
-      volumes:
-        - ./influxdb:/var/lib/influxdb2
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.influxdb.entrypoints=websecure"
-        - "traefik.http.routers.influxdb.rule=Host(`influx.${DOMAIN_NAME}`)"
-        - "traefik.http.routers.influxdb.tls=true"
-        - "traefik.http.routers.influxdb.tls.certresolver=cloudflare"
-        - "traefik.http.routers.influxdb.service=influxdb"
-        - "traefik.http.routers.influxdb.middlewares=local-only@file"
-        - "traefik.http.services.influxdb.loadbalancer.server.port=8086"
+    container_name: influxdb
+    image: influxdb:latest
+    restart: unless-stopped
+    networks:
+      - homelab
+      - monitoring
+    volumes:
+      - ./influxdb:/var/lib/influxdb2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.influxdb.entrypoints=websecure"
+      - "traefik.http.routers.influxdb.rule=Host(`influx.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.influxdb.tls=true"
+      - "traefik.http.routers.influxdb.tls.certresolver=cloudflare"
+      - "traefik.http.routers.influxdb.service=influxdb"
+      - "traefik.http.routers.influxdb.middlewares=local-only@file"
+      - "traefik.http.services.influxdb.loadbalancer.server.port=8086"
 
 networks:
   monitoring:

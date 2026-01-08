@@ -117,4 +117,3 @@ networks:
     external: true
   authentik:
     name: authentik
-

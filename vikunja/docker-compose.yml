@@ -2,15 +2,15 @@ services:
   vikunja:
     image: vikunja/vikunja
     container_name: vikunja
-    environment:   
-      VIKUNJA_SERVICE_PUBLICURL: https://vikunja.${DOMAIN_NAME}/ 
+    environment:
+      VIKUNJA_SERVICE_PUBLICURL: https://vikunja.${DOMAIN_NAME}/
       VIKUNJA_DATABASE_HOST: db
       VIKUNJA_DATABASE_PASSWORD: ${VIKUNJA_DATABASE_PASSWORD}
       VIKUNJA_DATABASE_TYPE: postgres
       VIKUNJA_DATABASE_USER: ${VIKUNJA_DATABASE_USER}
       VIKUNJA_DATABASE_DATABASE: ${VIKUNJA_DATABASE_DATABASE}
       VIKUNJA_SERVICE_JWTSECRET: ${VIKUNJA_SERVICE_JWTSECRET}
-    volumes: 
+    volumes:
       - ./files:/app/vikunja/files
     networks:
       - vikunja
