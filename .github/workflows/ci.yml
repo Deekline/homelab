@@ -9,27 +9,47 @@ permissions:
   contents: read
 
 jobs:
-  compose-validate:
-    name: compose-validate
+  detect:
+    name: detect
     runs-on: ubuntu-latest
+    outputs:
+      has_terraform: ${{ steps.detect.outputs.has_terraform }}
+      has_ansible: ${{ steps.detect.outputs.has_ansible }}
+      has_stacks: ${{ steps.detect.outputs.has_stacks }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Docker Compose plugin
+      - id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -d terraform ]; then echo "has_terraform=true" >> "$GITHUB_OUTPUT"; else echo "has_terraform=false" >> "$GITHUB_OUTPUT"; fi
+          if [ -d ansible ]; then echo "has_ansible=true" >> "$GITHUB_OUTPUT"; else echo "has_ansible=false" >> "$GITHUB_OUTPUT"; fi
+          if [ -d stacks ]; then echo "has_stacks=true" >> "$GITHUB_OUTPUT"; else echo "has_stacks=false" >> "$GITHUB_OUTPUT"; fi
+
+  compose-validate:
+    name: compose-validate
+    runs-on: ubuntu-latest
+    needs: detect
+    if: ${{ needs.detect.outputs.has_stacks == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Docker + Compose
         run: |
           docker version
           docker compose version
 
-      - name: Validate all docker-compose.yml files
+      - name: Validate all docker-compose files under stacks/
         shell: bash
         run: |
           set -euo pipefail
-          mapfile -t files < <(find stacks -maxdepth 2 -type f \( -name 'docker-compose.yml' -o -name 'compose.yml' \) 2>/dev/null || true)
+          mapfile -t files < <(find stacks -maxdepth 2 -type f \( -name 'docker-compose.yml' -o -name 'compose.yml' -o -name 'compose.yaml' \) 2>/dev/null || true)
           if [ "${#files[@]}" -eq 0 ]; then
             echo "No compose files found under stacks/"
             exit 0
           fi
-
           for f in "${files[@]}"; do
             echo "==> Validating: $f"
             docker compose -f "$f" config >/dev/null
@@ -53,39 +73,45 @@ jobs:
   terraform:
     name: terraform
     runs-on: ubuntu-latest
-    if: ${{ hashFiles('terraform/**') != '' }}
-    defaults:
-      run:
-        shell: bash
-        working-directory: terraform/proxmox
+    needs: detect
+    if: ${{ needs.detect.outputs.has_terraform == 'true' }}
     steps:
       - uses: actions/checkout@v4
-
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.7.5
 
       - name: terraform fmt (check)
-        run: terraform fmt -check -recursive
+        shell: bash
+        run: terraform fmt -check -recursive terraform
 
-      - name: terraform init (no backend)
-        run: terraform init -backend=false
-
-      - name: terraform validate
-        run: terraform validate
+      # If you have multiple terraform roots, validate each one; adjust as needed.
+      - name: terraform validate (each directory with *.tf)
+        shell: bash
+        run: |
+          set -euo pipefail
+          roots=$(find terraform -maxdepth 2 -type f -name '*.tf' -printf '%h\n' | sort -u)
+          if [ -z "${roots:-}" ]; then
+            echo "No terraform files found."
+            exit 0
+          fi
+          for d in $roots; do
+            echo "==> Validating: $d"
+            terraform -chdir="$d" init -backend=false
+            terraform -chdir="$d" validate
+          done
 
   ansible-lint:
     name: ansible-lint
     runs-on: ubuntu-latest
-    if: ${{ hashFiles('ansible/**') != '' }}
+    needs: detect
+    if: ${{ needs.detect.outputs.has_ansible == 'true' }}
     steps:
       - uses: actions/checkout@v4
-
       - name: Install ansible-lint
         run: |
           python3 -m pip install --upgrade pip
           pip install ansible ansible-lint
-
       - name: ansible-lint
         run: ansible-lint ansible
 
@@ -94,11 +120,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Fail if .env files are committed
         shell: bash
         run: |
           set -euo pipefail
+          # Allow .env.example only
           bad=$(git ls-files | grep -E '(^|/)\.env($|[^.])|\.env\.' | grep -vE '\.example$' || true)
           if [ -n "$bad" ]; then
             echo "ERROR: Committed env files detected:"

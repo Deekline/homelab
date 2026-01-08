@@ -6,8 +6,6 @@ entryPoints:
   web:
     address: ":80"
     http:
-      middlewares:
-        - crowdsec@file
       redirections:
         entryPoint:
           to: websecure
@@ -15,9 +13,11 @@ entryPoints:
           permanent: true
   websecure:
     address: ":443"
-    http:
-      middlewares:
-        - crowdsec@file
+    transport:
+      respondingTimeouts:
+        readTimeout: 0s
+        writeTimeout: 0s
+        idleTimeout: 0s
 
 certificatesResolvers:
   cloudflare:
@@ -36,8 +36,8 @@ providers:
     exposedByDefault: false
     network: homelab
 
-  file: 
-    directory: ./dynamic
+  file:
+    directory: /dynamic
     watch: true
 
 api:
@@ -67,6 +67,6 @@ accessLog:
 
 experimental:
   plugins:
-    crowdsec: 
+    crowdsec:
       moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
       version: "v1.4.5"
