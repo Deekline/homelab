@@ -12,8 +12,8 @@ services:
       - PGID=1000
       - TZ=Europe/Warsaw
     volumes:
-     - ./qbittorent_config:/config
-     - /media/downloads:/downloads
+      - ./qbittorent_config:/config
+      - /media/downloads:/downloads
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.qbittorrent.entrypoints=websecure"
@@ -37,9 +37,9 @@ services:
       - PGID=1000
       - TZ=Europe/Warsaw
     volumes:
-     - ./sonarr_config:/config
-     - /media/tv:/tv
-     - /media/downloads:/downloads
+      - ./sonarr_config:/config
+      - /media/tv:/tv
+      - /media/downloads:/downloads
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.sonarr.entrypoints=websecure"
@@ -63,9 +63,9 @@ services:
       - PGID=1000
       - TZ=Europe/Warsaw
     volumes:
-     - ./radarr_config:/config
-     - /media/movies:/movies
-     - /media/downloads:/downloads
+      - ./radarr_config:/config
+      - /media/movies:/movies
+      - /media/downloads:/downloads
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.radarr.entrypoints=websecure"
