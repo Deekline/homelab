@@ -63,12 +63,6 @@ jobs:
       - uses: ibiqlik/action-yamllint@v3
         with:
           file_or_dir: .
-          config_data: |
-            extends: default
-            rules:
-              line-length:
-                max: 140
-              truthy: disable
 
   terraform:
     name: terraform
