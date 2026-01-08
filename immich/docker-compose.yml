@@ -40,8 +40,12 @@ services:
       - "traefik.http.routers.immich.tls=true"
       - "traefik.http.routers.immich.tls.certresolver=cloudflare"
       - "traefik.http.routers.immich.service=immich"
-      - "traefik.http.routers.immich.middlewares=local-only@file,authentik@file,security-headers@file"
+      - "traefik.http.routers.immich.middlewares=local-only@file,security-headers@file"
       - "traefik.http.services.immich.loadbalancer.server.port=2283"
+      - "traefik.http.middlewares.immich-buffer.buffering.maxRequestBodyBytes=0"
+      - "traefik.http.middlewares.immich-buffer.buffering.memRequestBodyBytes=0"
+      - "traefik.http.middlewares.immich-timeout.forwardingTimeouts.readTimeout=0"
+      - "traefik.http.middlewares.immich-timeout.forwardingTimeouts.writeTimeout=0"
 
   immich-machine-learning:
     container_name: immich_machine_learning
