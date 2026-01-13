@@ -1,0 +1,78 @@
+services:
+  broker:
+    image: docker.io/library/redis:8
+    restart: unless-stopped
+    networks:
+      - paperless
+    volumes:
+      - ./redisdata:/data
+
+  db:
+    image: docker.io/library/postgres:18
+    restart: unless-stopped
+    networks:
+      - paperless
+    volumes:
+      - ./pgdata:/var/lib/postgresql
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+      - broker
+      - gotenberg
+      - tika
+    networks:
+      - paperless
+      - homelab
+    volumes:
+      - ./data:/usr/src/paperless/data
+      - ${MEDIA_LOCATION}:/usr/src/paperless/media
+      - ${EXPORT_LOCATION}:/usr/src/paperless/export
+      - ${CONSUME_LOCATION}:/usr/src/paperless/consume
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBHOST: db
+      PAPERLESS_DBUSER: ${POSTGRES_USER}
+      PAPERLESS_DBPASS: ${POSTGRES_PASSWORD}
+      PAPERLESS_TIKA_ENABLED: 1
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.paperless.entrypoints=websecure"
+      - "traefik.http.routers.paperless.rule=Host(`paperless.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.paperless.tls=true"
+      - "traefik.http.routers.paperless.tls.certresolver=cloudflare"
+      - "traefik.http.routers.paperless.service=paperless"
+      - "traefik.http.routers.paperless.middlewares=local-only@file,security-headers@file"
+      - "traefik.http.services.paperless.loadbalancer.server.port=8000"
+
+  gotenberg:
+    image: docker.io/gotenberg/gotenberg:8.25
+    restart: unless-stopped
+    networks:
+      - paperless
+    # The gotenberg chromium route is used to convert .eml files. We do not
+    # want to allow external content like tracking pixels or even javascript.
+    command:
+      - "gotenberg"
+      - "--chromium-disable-javascript=true"
+      - "--chromium-allow-list=file:///tmp/.*"
+
+  tika:
+    image: docker.io/apache/tika:latest
+    restart: unless-stopped
+    networks:
+      - paperless
+
+networks:
+  homelab:
+    name: homelab
+    external: true
+  paperless:
+    name: paperless
