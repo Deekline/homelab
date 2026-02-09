@@ -1,6 +1,6 @@
 services:
   zerobyte:
-    image: ghcr.io/nicotsx/zerobyte:v0.19
+    image: ghcr.io/nicotsx/zerobyte:v0.25
     container_name: zerobyte
     restart: unless-stopped
     networks:
@@ -11,10 +11,13 @@ services:
       - /dev/fuse:/dev/fuse
     environment:
       - TZ=Europe/Warsaw
+      - APP_SECRET=${APP_SECRET}
+      - BASE_URL=https://zerobyte.${DOMAIN_NAME}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./data:/var/lib/zerobyte
       - /home/deekline/homelab:/mydata:ro
+      - /mnt/tank/zerobyte/:/var/lib/zerobyte/repositories/
 
     labels:
       - "traefik.enable=true"
