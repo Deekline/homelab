@@ -12,7 +12,7 @@ services:
       - LOG_CHANNEL=stack
       - APP_LOG_LEVEL=notice
       - AUDIT_LOG_LEVEL=info
-      - DB_HOST=firefly-db
+      - DB_HOST=postgres-17
       - DB_PORT=5432
       - DB_CONNECTION=pgsql
       - DB_DATABASE=${FIREFLY_DATABASE_NAME}
@@ -51,11 +51,10 @@ services:
     volumes:
       - firefly_iii_upload:/var/www/html/storage/upload
     networks:
+      - pg
       - firefly
       - homelab
     depends_on:
-      firefly-db:
-        condition: service_healthy
       firefly-redis:
         condition: service_started
     restart: unless-stopped
@@ -68,24 +67,6 @@ services:
       - "traefik.http.routers.firefly.service=firefly"
       - "traefik.http.routers.firefly.middlewares=local-only@file,security-headers@file"
       - "traefik.http.services.firefly.loadbalancer.server.port=8080"
-
-  firefly-db:
-    image: postgres:17-alpine
-    container_name: firefly-db
-    environment:
-      - POSTGRES_PASSWORD=${FIREFLY_DATABASE_PASSWORD}
-      - POSTGRES_USER=${FIREFLY_DATABASE_USER}
-      - POSTGRES_DB=${FIREFLY_DATABASE_NAME}
-      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
-    networks:
-      - firefly
-    volumes:
-      - ./db:/var/lib/postgresql/data
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h localhost -U $$POSTGRES_USER"]
-      interval: 2s
-      start_period: 30s
 
   firefly-redis:
     image: redis:7-alpine
@@ -117,6 +98,9 @@ volumes:
 networks:
   firefly:
     name: firefly
+  pg:
+    name: pg
+    external: true
   homelab:
     name: homelab
     external: true
